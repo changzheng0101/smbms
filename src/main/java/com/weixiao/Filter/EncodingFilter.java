@@ -1,6 +1,7 @@
 package com.weixiao.Filter;
 
-import jakarta.servlet.*;
+
+import javax.servlet.*;
 
 import java.io.IOException;
 
@@ -12,9 +13,10 @@ import java.io.IOException;
  */
 public class EncodingFilter implements Filter {
 
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
+
     }
 
     @Override
@@ -27,6 +29,6 @@ public class EncodingFilter implements Filter {
 
     @Override
     public void destroy() {
-        Filter.super.destroy();
+
     }
 }
