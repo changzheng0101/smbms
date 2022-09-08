@@ -19,4 +19,6 @@ public interface UserService {
      * @return
      */
     User login(String userName, String password) throws SQLException;
+
+    boolean updatePassword(int id, String password) throws SQLException;
 }

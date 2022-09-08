@@ -18,4 +18,15 @@ public interface UserDao {
      * @return
      */
     User getUserByUserCode(Connection connection, String UserCode) throws SQLException;
+
+    /**
+     * 根据id修改用户密码
+     *
+     * @param connection
+     * @param id
+     * @param password
+     * @return
+     * @throws SQLException
+     */
+    boolean updatePasswordById(Connection connection, int id, String password) throws SQLException;
 }

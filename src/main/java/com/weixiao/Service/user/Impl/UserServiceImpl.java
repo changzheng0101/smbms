@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
-    public UserServiceImpl(){
+    public UserServiceImpl() {
         this.userDao = new UserDaoImpl();
     }
 
@@ -30,5 +30,13 @@ public class UserServiceImpl implements UserService {
             userByUserCode = null;
         }
         return userByUserCode;
+    }
+
+    @Override
+    public boolean updatePassword(int id, String password) throws SQLException {
+        Connection connection = BaseDao.getConnection();
+        boolean result =  userDao.updatePasswordById(connection, id, password);
+        BaseDao.closeResource(connection, null, null);
+        return result;
     }
 }
