@@ -2,10 +2,12 @@ package com.weixiao.Dao;
 
 import com.weixiao.Util.Constants;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
+import com.mysql.cj.jdbc.Driver;
 
 /**
  * 对和数据库的交互进行封装
@@ -20,7 +22,7 @@ public class BaseDao {
     private static String password;
 
     static {
-        Properties properties = null;
+        Properties properties = new Properties();
         InputStream inputStream = BaseDao.class.getClassLoader().getResourceAsStream(Constants.DB_CONFIG);
         try {
             properties.load(inputStream);
