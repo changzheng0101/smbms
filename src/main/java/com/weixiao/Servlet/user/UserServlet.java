@@ -1,24 +1,22 @@
 package com.weixiao.Servlet.user;
 
 
-import com.weixiao.Dao.BaseDao;
-import com.weixiao.Dao.user.Impl.UserDaoImpl;
-import com.weixiao.Dao.user.UserDao;
+import com.alibaba.fastjson.JSONArray;
+import com.mysql.cj.core.util.StringUtils;
 import com.weixiao.Pojo.User;
 import com.weixiao.Service.user.Impl.UserServiceImpl;
 import com.weixiao.Service.user.UserService;
 import com.weixiao.Util.Constants;
-import org.junit.Test;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author weixiao
@@ -27,6 +25,46 @@ import java.sql.SQLException;
 public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String method = req.getParameter("method");
+        if (method.equals("savepwd")) {
+            updatePassword(req, resp);
+        } else if (method.equals("pwdmodify")) {
+            checkPassword(req, resp);
+        }
+    }
+
+    private void checkPassword(HttpServletRequest req, HttpServletResponse resp) {
+        String oldPassword = req.getParameter("oldpassword");
+        Object attribute = req.getSession().getAttribute(Constants.USER_SESSION);
+        Map<String, String> resultMap = new HashMap<>(1);
+        if (attribute != null) {
+            if (StringUtils.isNullOrEmpty(oldPassword)) {
+                resultMap.put("result", "error");
+            }
+            String userPassword = ((User) attribute).getUserPassword();
+            if (userPassword.equals(oldPassword)) {
+                resultMap.put("result", "true");
+            } else {
+                resultMap.put("result", "false");
+            }
+        } else {
+            resultMap.put("result", "sessionerror");
+        }
+        try {
+            resp.setContentType("application/json");
+            PrintWriter writer = resp.getWriter();
+            writer.write(JSONArray.toJSONString(resultMap));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+    }
+
+    public void updatePassword(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Object attribute = req.getSession().getAttribute(Constants.USER_SESSION);
         String newPassword = req.getParameter("newpassword");
         boolean result = false;
@@ -45,12 +83,6 @@ public class UserServlet extends HttpServlet {
             req.setAttribute(Constants.MESSAGE, "修改密码失败");
         }
 
-        req.getRequestDispatcher("/jsp/pwdmodify.jsp").forward(req,resp);
-
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+        req.getRequestDispatcher("/jsp/pwdmodify.jsp").forward(req, resp);
     }
 }
