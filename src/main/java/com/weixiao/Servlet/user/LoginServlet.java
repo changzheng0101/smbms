@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 // login success
                 req.getSession().setAttribute(Constants.USER_SESSION, user);
-                resp.sendRedirect("/smbms/jsp/frame.jsp");
+                resp.sendRedirect(req.getContextPath() + "/jsp/frame.jsp");
             }
         } catch (Exception e) {
             System.out.println(e);
